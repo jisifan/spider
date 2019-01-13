@@ -28,10 +28,11 @@ class FundObj:
     '''
     单个基金对象
     '''
-    def __init__(self,code,name,estimate):
+    def __init__(self,code,name,estimate,actual):
         self.code = code
         self.name = name
         self.estimate = estimate
+        self.actual = actual
 
 class WebHandle():
     '''
@@ -76,7 +77,7 @@ class WebHandle():
 
         for i in range(length):
             fund = self.fundlist[i]
-            self.kk.append(FundObj(fund['bzdm'],fund['jjjc'],fund['gsz']))
+            self.kk.append(FundObj(fund['bzdm'],fund['jjjc'],fund['gsz'],fund['gbdwjz']))
         return self.kk
 
 
@@ -92,15 +93,18 @@ def mission():
     codeList = []
     nameList = []
     estimateList = []
+    actualList = []
     for x in data:
         codeList.append(x.code)
         nameList.append(x.name)
         estimateList.append(x.estimate)
+        actualList.append(x.actual)
+
     
-    result = pd.DataFrame({'code':codeList,'name':nameList,'estimate':estimateList})
+    result = pd.DataFrame({'code':codeList,'name':nameList,'estimate':estimateList,'actual':actualList})
     
     # 输出至Excel
-    fileLocation = outputFile + '\天天基金网数据_'+ time.strftime('%Y-%m-%d',time.localtime(time.time())) + '.xlsx'
+    fileLocation = outputFile + '\天天基金'+ time.strftime('%Y%m%d',time.localtime(time.time())) + '.xlsx'
     time.strftime('%Y-%m-%d',time.localtime(time.time()))
     with pd.ExcelWriter(fileLocation) as writer:
         result.to_excel(writer,sheet_name = 'data')
